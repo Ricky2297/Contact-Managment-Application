@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import getState from "./flux.js";
-
 // Don't change, here is where we initialize our context, by default its just going to be Null.
 export const Context = React.createContext(null);
-
 // This function injects the global store to any view/component where you want to use it, we will inject the context to Layout.jsx, you can see it here:
 // https://github.com/4GeeksAcademy/react-hello-webapp/blob/master/src/js/layout.jsx#L35
 const injectContext = PassedComponent => {
@@ -20,18 +18,19 @@ const injectContext = PassedComponent => {
 					})
 			})
 		);
-
 		useEffect(() => {
-			/**
-			 * EDIT THIS!
-			 * This function is the equivalent to "window.onLoad", it only run once on the entire application lifetime
-			 * you should do your ajax requests or fetch api requests here
-			 *
-			 * state.loadSomeData(); <---- calling this function from the flux.js actions
-			 *
-			 **/
+			fetch("https://assets.breatheco.de/apis/fake/contact/agenda/rickyagenda")
+				.then(response => response.json())
+				.then(data => {
+					//let { store } = state;
+					setState({
+						...state,
+						store: {
+							agenda: data
+						}
+					});
+				});
 		}, []);
-
 		// the initial value for the context its not null anymore, but the current state of this component,
 		// the context will have a getStore and setStore functions available then, because they were declared
 		// on the state of this component
@@ -43,5 +42,4 @@ const injectContext = PassedComponent => {
 	};
 	return StoreWrapper;
 };
-
 export default injectContext;
